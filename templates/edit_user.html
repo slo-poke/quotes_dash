@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quotes Dash</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topDiv">
+        <h1>Welcome, {{ session['user'][0]['first_name'] }}!</h1>
+        <a href="/home">Back</a>
+        <button><a href="/logout">Log off</a></button>
+    </div>
+    <div class="wrapper">
+        {% with successes = get_flashed_messages(category_filter=['success']) %}
+            {% if successes %}
+                {%- for msg in successes %}
+                    <p class="success">{{ msg }}</p>
+                {% endfor -%}
+            {% endif %}
+        {% endwith %}
+        <div class="leftDiv">
+            <h5>Edit My Account</h5>
+            <form action="/update_user" method="POST">
+                <p>First Name</p>
+                <input type="text" name="fname" value="{{ user_info[0]['first_name'] }}">
+                {% with successes = get_flashed_messages(category_filter=['fname']) %}
+                    {% if successes %}
+                        {%- for msg in successes %}
+                            <p class="error">{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <p>Last Name</p>
+                <input type="text" name="lname" value="{{ user_info[0]['last_name'] }}">
+                {% with successes = get_flashed_messages(category_filter=['lname']) %}
+                    {% if successes %}
+                        {%- for msg in successes %}
+                            <p class="error">{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <p>Email</p>
+                <input type="text" name="email" value="{{user_info[0]['email'] }}">
+                {% with successes = get_flashed_messages(category_filter=['email']) %}
+                    {% if successes %}
+                        {%- for msg in successes %}
+                            <p class="error">{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <br />
+                <input type="submit" value="Update" class="btnSubmit">
+            </form>
+        </div>
+        <div class="rightDiv">
+            
+        </div>
+    </div>
+</body>
+</html>

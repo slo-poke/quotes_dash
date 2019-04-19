@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quotes Dash</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topDiv">
+        <h1>Welcome, {{ name }}!</h1>
+        <a href="/show/edit_user">Edit My Account</a>
+        <button><a href="/logout">Log off</a></button>
+    </div>
+    <div class="wrapper">
+        {% with successes = get_flashed_messages(category_filter=['success']) %}
+            {% if successes %}
+                {%- for msg in successes %}
+                    <p class="success">{{ msg }}</p>
+                {% endfor -%}
+            {% endif %}
+        {% endwith %}
+        <div class="leftDiv">
+            <h5>Quotes</h5>
+            {% set found = False %}
+            {% for quote in all_quotes %}
+                <div class="quote_wrapper">
+                    <p>{{ quote['author'] }}: "{{ quote['quote'] }}"</p>
+                    <p>Posted by <a href="/show/user_uploads/{{ quote['uploaded_by'] }}">{{ quote['first_name'] }} {{ quote['last_name'] }}</a></p>
+                    {% for like in all_likes %}
+                        {% if quote['id'] == like['quote_id'] %}
+                            {% set Found = True %}
+                            <p class="inline">{{ like['COUNT(user_id)'] }} Like(s)</p>
+                        {% endif %}
+                    {% endfor %}
+                    <!-- {% if found == False %}
+                        <p class="inline">0 Likes</p><a href="/like/{{ quote['id'] }}"><button href="/like/{{ quote['id'] }}">Like</button></a>
+                    {% endif %} -->
+                    <a href="/like/{{ quote['id'] }}"><button href="/like/{{ quote['id'] }}">Like</button></a>
+                    {% if quote['uploaded_by'] == session['user'][0]['id'] %}
+                        <a href="/delete_quote/{{ quote['id'] }}">Delete</a>
+                    {% endif %}
+                </div>
+                {% set found = False %}
+            {% endfor %}
+        </div>
+        <div class="rightDiv">
+            <h5>Add a Quote!</h5>
+            {% with successes = get_flashed_messages(category_filter=['upload_error']) %}
+                {% if successes %}
+                    {%- for msg in successes %}
+                        <p class="error">{{ msg }}</p>
+                    {% endfor -%}
+                {% endif %}
+            {% endwith %}
+            <form action="/validate_quote" method="POST">
+                <p>Author</p>
+                <input type="text" name="author">
+                {% with successes = get_flashed_messages(category_filter=['author']) %}
+                    {% if successes %}
+                        {%- for msg in successes %}
+                            <p class="error">{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <p>Quote</p>
+                <textarea rows="5" cols="53" name="quote"></textarea>
+                {% with successes = get_flashed_messages(category_filter=['quote']) %}
+                    {% if successes %}
+                        {%- for msg in successes %}
+                            <p class="error">{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <br />
+                <input type="submit" value="Submit" class="btnSubmit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

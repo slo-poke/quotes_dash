@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quotes Dash</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="topDiv">
+        <h1>Welcome, {{ session['user'][0]['first_name'] }}!</h1>
+        <a href="/home">Back</a>
+        <button><a href="/logout">Log off</a></button>
+    </div>
+    <div class="wrapper">
+        {% with successes = get_flashed_messages(category_filter=['success']) %}
+            {% if successes %}
+                {%- for msg in successes %}
+                    <p class="success">{{ msg }}</p>
+                {% endfor -%}
+            {% endif %}
+        {% endwith %}
+        <div class="leftDiv">
+            <h5>Quotes Uploaded by {{ all_quotes[0]['first_name'] }} {{ all_quotes[0]['last_name'] }}</h5>
+            {% for quote in all_quotes %}
+                <div class="quote_wrapper">
+                    <p>{{ quote['author'] }}: "{{ quote['quote'] }}"</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="rightDiv">
+            
+        </div>
+    </div>
+</body>
+</html>
